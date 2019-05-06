@@ -8,6 +8,7 @@ from .compat import GTE_CMS_35
 from .conf import settings
 from .helpers import get_plugin_index_data
 from .utils import clean_join, get_index_base, strip_tags
+import collections
 
 
 # Backwards compatibility
@@ -125,7 +126,7 @@ class TitleIndex(get_index_base()):
 
         page_meta_keywords = getattr(current_page, 'get_meta_keywords', None)
 
-        if callable(page_meta_keywords):
+        if isinstance(page_meta_keywords, collections.Callable):
             text_bits.append(page_meta_keywords())
 
         return clean_join(' ', text_bits)

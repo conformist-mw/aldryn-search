@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
+
 
 import importlib
 import re
@@ -17,6 +17,7 @@ from lxml.etree import ParseError, ParserError
 from lxml.html.clean import Cleaner as LxmlCleaner
 
 from .conf import settings
+import collections
 
 
 def _get_alias_from_language_func():
@@ -27,7 +28,7 @@ def _get_alias_from_language_func():
             func = get_callable(path_or_callable)
         except AttributeError as error:
             raise ImproperlyConfigured('ALDRYN_SEARCH_ALIAS_FROM_LANGUAGE: %s' % (str(error)))
-        if not callable(func):
+        if not isinstance(func, collections.Callable):
             raise ImproperlyConfigured('ALDRYN_SEARCH_ALIAS_FROM_LANGUAGE: %s is not callable' % func)
     else:
         func = alias_from_language
@@ -42,7 +43,7 @@ def _get_language_from_alias_func():
             func = get_callable(path_or_callable)
         except AttributeError as error:
             raise ImproperlyConfigured('ALDRYN_SEARCH_LANGUAGE_FROM_ALIAS: %s' % (str(error)))
-        if not callable(func):
+        if not isinstance(func, collections.Callable):
             raise ImproperlyConfigured('ALDRYN_SEARCH_LANGUAGE_FROM_ALIAS: %s is not callable' % func)
     else:
         func = language_from_alias
@@ -64,7 +65,7 @@ def clean_join(separator, iterable):
     """
     Filters out iterable to only join non empty items.
     """
-    return separator.join(filter(None, iterable))
+    return separator.join([_f for _f in iterable if _f])
 
 
 def get_callable(string_or_callable):
@@ -72,7 +73,7 @@ def get_callable(string_or_callable):
     If given a callable then it returns it, otherwise it resolves the path
     and returns an object.
     """
-    if callable(string_or_callable):
+    if isinstance(string_or_callable, collections.Callable):
         return string_or_callable
     else:
         module_name, object_name = string_or_callable.rsplit('.', 1)
