@@ -28,7 +28,7 @@ def _get_alias_from_language_func():
             func = get_callable(path_or_callable)
         except AttributeError as error:
             raise ImproperlyConfigured('ALDRYN_SEARCH_ALIAS_FROM_LANGUAGE: %s' % (str(error)))
-        if not isinstance(func, collections.Callable):
+        if not isinstance(func, collections.abc.Callable):
             raise ImproperlyConfigured('ALDRYN_SEARCH_ALIAS_FROM_LANGUAGE: %s is not callable' % func)
     else:
         func = alias_from_language
